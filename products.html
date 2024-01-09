@@ -13,6 +13,9 @@
         .img-top{
             height: 300px;
         }
+        .images {
+        height: 150px;
+        }
 
     </style>
 </head>
@@ -20,56 +23,64 @@
     <div id="app">
         <div class="container">
             <div class="row mt-2">
-                <div class="col-sm-6">
-                    <h2 class="mb-4">產品列表</h2>
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th class="col">產品名稱</th>
-                                <th class="col">原價</th>
-                                <th class="col">售價</th>
-                                <th class="col">是否啟用</th>
-                                <th class="col">查看細節</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(item, index) in products" :key="index">
-                                <td>{{item.title}}</td>
-                                <td>{{item.origin_price}}</td>
-                                <td>{{item.price}}</td>
-                                <td><span v-if="item.is_enabled" class="text-success">啟用</span> <span v-else>未啟用</span></td>
-                                <td><button class="btn btn-primary btn-sm" type="button" @click="template = item">查看詳細</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p>目前有 <span>{{ Object.keys(products).length }}</span> 項產品</p>
-
-                    <button class="btn btn-danger me-2" type="button" @click="logout">登出</button>
-                    <!-- <button class="btn btn-danger" type="button" @clikc="removeItem">刪除API全部商品</button> -->
+                <div class="text-center position-absolute top-50 start-50 translate-middle" id="loadingContainer" v-if="loading">
+                    <div class="spinner-border" style="height:50px; width: 50px;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p>Loading...</p>
                 </div>
-                <div class="col-sm-6">
-                    <h2>單一產品細節</h2>
-                    <template v-if="template.title">
-                        <div class="card ms-2">
-                            <img class="img-top" v-bind:src="template.imageUrl" alt="">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ template.title }} <span class=" badge bg-primary">{{ template.category }}</span></h5>
-                                <p class="card-text">商品描述：{{ template.description }}</p>
-                                <p class="card-text">商品內容：{{ template.content }}</p>
-                                <div class="d-flex">
-                                    <p class="card-text me-2">特價：{{ template.price }}</p>
-                                    <p class="card-text text-secondary" ><del>原價：{{ template.origin_price }}</del></p>
-                                    <p>元 / {{ template.unit }}</p>
+                <template v-else>
+                    <div class="col-sm-6">
+                        <h2 class="mb-4">產品列表</h2>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="col">產品名稱</th>
+                                    <th class="col">原價</th>
+                                    <th class="col">售價</th>
+                                    <th class="col">是否啟用</th>
+                                    <th class="col">查看細節</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(item, index) in products" :key="index">
+                                    <td>{{item.title}}</td>
+                                    <td>{{item.origin_price}}</td>
+                                    <td>{{item.price}}</td>
+                                    <td><span v-if="item.is_enabled" class="text-success">啟用</span> <span v-else>未啟用</span></td>
+                                    <td><button class="btn btn-primary btn-sm" type="button" @click="template = item">查看詳細</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>目前有 <span>{{ Object.keys(products).length }}</span> 項產品</p>
+    
+                        <button class="btn btn-danger me-2" type="button" @click="logout">登出</button>
+                        <!-- <button class="btn btn-danger" type="button" @clikc="removeItem">刪除API全部商品</button> -->
+                    </div>
+                    <div class="col-sm-6">
+                        <h2>單一產品細節</h2>
+                        <template v-if="template.title">
+                            <div class="card ms-2">
+                                <img class="img-top" v-bind:src="template.imageUrl" alt="">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ template.title }} <span class=" badge bg-primary">{{ template.category }}</span></h5>
+                                    <p class="card-text">商品描述：{{ template.description }}</p>
+                                    <p class="card-text">商品內容：{{ template.content }}</p>
+                                    <div class="d-flex">
+                                        <p class="card-text me-2">特價：{{ template.price }}</p>
+                                        <p class="card-text text-secondary" ><del>原價：{{ template.origin_price }}</del></p>
+                                        <p>元 / {{ template.unit }}</p>
+                                    </div>
+                                    
                                 </div>
-                                
                             </div>
-                        </div>
-                        <template>
-                            <img src="" alt="" class="images m-2">
+                            <template v-for="(img, index) in template.imagesUrl" :key="index">
+                                <img :src="img" alt="" class="images m-2">
+                            </template>
                         </template>
-                    </template>
-                    <p v-else class="text-secondary">請選擇一個商品查看</p>
-                </div>
+                        <p v-else class="text-secondary">請選擇一個商品查看</p>
+                    </div>
+                </template>
             </div>
         </div>
     </div>

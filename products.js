@@ -6,7 +6,8 @@ const app = {
             apiUrl: 'https://ec-course-api.hexschool.io/v2',
             apiPath: 'chinging',
             products: [],
-            template: []
+            template: [],
+            loading: 1
             
         }
     },
@@ -26,6 +27,7 @@ const app = {
             .then((res) => {
                 this.products = res.data.products
                 console.log('this.products商品', this.products);
+                this.loading = 0    //資料載入好，loading 消失
             }).catch((err) => {
                 console.log(err.response.data);
             });
@@ -34,8 +36,8 @@ const app = {
             axios.post(`${this.apiUrl}/logout`)
             .then((res) => {
                 console.log(res.data);
-                document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                window.location = 'index.html'
+                document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; //刪除cookie
+                window.location = 'index.html'   //跳轉登入頁面
             }).catch((err) => {
                 console.log(err.response.data);
             });
@@ -47,5 +49,4 @@ const app = {
     },
 
 }
-
 createApp(app).mount('#app')
